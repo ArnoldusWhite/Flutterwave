@@ -1,4 +1,4 @@
-Class TransfersService{
+class TransfersService{
 
     // [--------- USING API ENDPOINTS ---------]
 

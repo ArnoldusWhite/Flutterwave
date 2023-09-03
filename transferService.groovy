@@ -22,7 +22,22 @@ class TransfersService{
         callback_url: "https://www.flutterwave.com/ng/",
         debit_currency : "NGN"
     ]);
-    getConnectionPayment.getOutputStream().write(data.getBytes("UTF-8"));
+    getConnection.getOutputStream().write(data.getBytes("UTF-8"));
+    int responseCode = getConnection.getResponseCode()
+    boolean state = (responseCode >= 200 && responseCode < 300);
+    if(state){
+        inputStream = new InputStreamReader(getConnection.getInputStream())
+        in=null;
+        in= new BufferedReader(inputStream);
+        outputString=""
+        responseString=""
+        while((responseString=in.readLine()) != null){
+            outputString = outputString + responseString
+        }
+        
+        def jsonResponse = new groovy.json.JsonSlurper()
+        result = jsonResponse.parseText(outputString)
+    }
 
     //Api call for bank transfer END ---------------------------------------
 
@@ -44,28 +59,11 @@ class TransfersService{
         beneficiary_name: "Flutterwave Developers",
     ]);
 
-    getConnectionPayment.getOutputStream().write(data.getBytes("UTF-8"));
-
-    //Api call for bank transfer END -----------------------
-
-    /*
-     * For case 1, the transfer status will be update when the callback function will be call.
-     * If not, after a certain time, if the callback_URL is not call, the status should be update.
-     */
-    
-     /*
-      * Case 2 Check the transfer status
-      */
-    String url = baseUrl + "transfers"
-    def getConnection = new URL(url).openConnection();
-    getConnection.setRequestMethod("GET");
-    getConnection.setDoOutput(true);
-    getConnection.setRequestProperty("Content-Type", "application/json");
-    getConnection.setRequestProperty("Authorization", "Bearer FLWSECK_TEST-SANDBOXDEMOKEY-X");
-    responseCode = getConnection.getResponseCode();
+    getConnection.getOutputStream().write(data.getBytes("UTF-8"));
+    int responseCode = getConnection.getResponseCode()
     boolean state = (responseCode >= 200 && responseCode < 300);
     if(state){
-        inputStream = new InputStreamReader(getConPaymentCheck.getInputStream())
+        inputStream = new InputStreamReader(getConnection.getInputStream())
         in=null;
         in= new BufferedReader(inputStream);
         outputString=""
@@ -78,8 +76,35 @@ class TransfersService{
         result = jsonResponse.parseText(outputString)
     }
 
+    //Api call for bank transfer END -----------------------
+
+    /*
+     * For case 1, the transfer status will be update when the callback function will be call.
+     * If not, after a certain time, if the callback_URL is not call, the status should be update.
+     */
     
-
-
-   
+     /*
+      * Case 2 Check the transfer status
+      */
+    String url = baseUrl + "transfers/"+ transferId;
+    def getConnection = new URL(url).openConnection();
+    getConnection.setRequestMethod("GET");
+    getConnection.setDoOutput(true);
+    getConnection.setRequestProperty("Content-Type", "application/json");
+    getConnection.setRequestProperty("Authorization", "Bearer FLWSECK_TEST-SANDBOXDEMOKEY-X");
+    responseCode = getConnection.getResponseCode();
+    boolean state = (responseCode >= 200 && responseCode < 300);
+    if(state){
+        inputStream = new InputStreamReader(getConnection.getInputStream())
+        in=null;
+        in= new BufferedReader(inputStream);
+        outputString=""
+        responseString=""
+        while((responseString=in.readLine()) != null){
+            outputString = outputString + responseString
+        }
+        
+        def jsonResponse = new groovy.json.JsonSlurper()
+        result = jsonResponse.parseText(outputString)
+    }
 }
